@@ -1,142 +1,172 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
-  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
-  <title>Hello, World!</title>
-  <style>
-  .hide{
-    display:none;
-  }
-  #products{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:15px;
-    grid-auto-rows:400px;
-  }
-  #products div{
-    box-shadow:0px 0px 15px 1px grey;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    border-radius:10px;
-  }
-  #products div img{
-    height:240px;
-    width:240px;
-  }
-  #products div h3{
-    text-align:center;
-  }
-  .showPup{
-    display:flex;
-    flex-direction:column;
-    background-color:white;
-    border-radius:10px;
-    position:fixed;
-    height:480px;
-    top:10%;
-    right:5%;
-    bottom:10%;
-    left:5%;
-    padding:15px;
-  }
-  .showOverlay{
-    display:block;
-    position:fixed;
-    top:0px;
-    left:0px;
-    height:100vh;
-    width:100vw;
-    background-color:rgba(0,0,0,0.5);
-  }
-  #pp-close-btn{
-    position:absolute;
-    right:10px;
-    top:10px;
-    height:30px;
-    width:30px;
-    border-radius:50%;
-    background-color:rgba(0,0,0,0.2);
-    border:none;
-    font-weight:bold
-  }
-  #pp-prdt-img{
-    height:240px;
-    object-fit:contain;
-  }
-  </style>
+    <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+    <title>Hello, World!</title>
+    <style>
+        .hide {
+            display: none;
+        }
+
+        #products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            grid-auto-rows: 300px;
+        }
+
+        #products div {
+            box-shadow: 0px 0px 5px 1px grey;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            transition:0.5s;
+        }
+
+        #products div:hover{
+            transform:scale(1.04);
+        }
+
+        #products div img {
+            height: 240px;
+            width: 240px;
+        }
+
+        #products div h3 {
+            text-align: center;
+        }
+
+        .showPup {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 10px;
+            position: fixed;
+            height: 480px;
+            top: 10%;
+            right: 5%;
+            bottom: 10%;
+            left: 5%;
+            padding: 15px;
+        }
+
+        .showOverlay {
+            display: block;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            height: 100vh;
+            width: 100vw;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #pp-close-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: none;
+            font-weight: bold;
+            transition:1s;
+        }
+
+        #pp-close-btn:hover{
+            background-color:black;
+            color:white;
+        }
+
+        #pp-prdt-img {
+            height: 240px;
+            object-fit: contain;
+            transition:1s;
+        }
+
+        #pp-prdt-img:hover{
+            transform:scale(1.3);
+        }
+
+        #line{
+            background:linear-gradient(to right,rgb(64, 181, 159),rgb(82, 82, 200),rgb(234, 180, 82),rgb(98, 98, 40),rgb(225, 156, 225),rgb(174, 225, 158));
+            height:7px;
+            margin-bottom:20px;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>
-    Product Store
-  </h1>
-  <div id="products"></div>
-  <div id="overlay" class="hide" onclick="hidePopUp()"></div>
-  <div id="pop-up-product" class="hide">
-    <h1 id="pp-prdt-title"></h1>
-    <p id="pp-prdt-desc"></p>
-    <img src="" id="pp-prdt-img">
-    <button id="pp-close-btn">X</button>
-  </div>
-  <script>
-  var products=[];
-  fetchProducts();
-  
-  function fetchProducts()
-  {
-      fetch("https://dummyjson.com/products")
-      .then(res => res.json())
-      .then(data =>{
-        products=data.products.slice()
-        displayProducts();
-      });
-  }
-  
-  function displayProducts()
-  {
-    var prdtsCard=document.getElementById("products");
-    products.forEach(function(product,i){
-      var prdtCard=document.createElement("div");
-      var prdtimg=document.createElement("img");
-      prdtimg.src=product.thumbnail;
-      var prdtTitle=document.createElement("h3");
-      prdtTitle.innerText=product.title;
-      prdtCard.appendChild(prdtimg);
-      prdtCard.appendChild(prdtTitle);
-      prdtCard.addEventListener("click",function(){
-        showPopUp(i);
-      });
-      prdtsCard.appendChild(prdtCard);      
-    });
-  }
-  
-  function showPopUp(i)
-  {
-    let popup=document.getElementById("pop-up-product");
-    let overlay=document.getElementById("overlay")
-    document.getElementById("pp-prdt-title").innerText=products[i].title;
-    document.getElementById("pp-prdt-desc").innerText=products[i].description;
-    document.getElementById("pp-prdt-img").src=products[i].thumbnail;
-    document.getElementById("pp-close-btn").addEventListener("click",function(){
-      hidePopUp()
-    });
-    overlay.classList.remove("hide");    
-    popup.classList.remove("hide");
-    overlay.classList.add("showOverlay");
-    popup.classList.add("showPup");
-  }
-  
-  function hidePopUp()
-  {
-    let popup=document.getElementById("pop-up-product");
-    let overlay=document.getElementById("overlay")
-    overlay.classList.remove("showOverlay");    
-    popup.classList.remove("showPup");
-    overlay.classList.add("hide");
-    popup.classList.add("hide");
-  }
-  </script>
+    <h1 align="center">
+        Product Store
+    </h1>
+    <hr id="line">
+    <div id="products"></div>
+    <div id="overlay" class="hide" onclick="hidePopUp()"></div>
+    <div id="pop-up-product" class="hide">
+        <h1 id="pp-prdt-title"></h1>
+        <p id="pp-prdt-desc"></p>
+        <img src="" id="pp-prdt-img">
+        <button id="pp-close-btn">X</button>
+    </div>
+    <script>
+        var products = [];
+        fetchProducts();
+
+        function fetchProducts() {
+            fetch("https://dummyjson.com/products")
+                .then(res => res.json())
+                .then(data => {
+                    products = data.products.slice()
+                    displayProducts();
+                });
+        }
+
+        function displayProducts() {
+            var prdtsCard = document.getElementById("products");
+            products.forEach(function (product, i) {
+                var prdtCard = document.createElement("div");
+                var prdtimg = document.createElement("img");
+                prdtimg.src = product.thumbnail;
+                var prdtTitle = document.createElement("h3");
+                prdtTitle.innerText = product.title;
+                prdtCard.appendChild(prdtimg);
+                prdtCard.appendChild(prdtTitle);
+                prdtCard.addEventListener("click", function () {
+                    showPopUp(i);
+                });
+                prdtsCard.appendChild(prdtCard);
+            });
+        }
+
+        function showPopUp(i) {
+            let popup = document.getElementById("pop-up-product");
+            let overlay = document.getElementById("overlay")
+            document.getElementById("pp-prdt-title").innerText = products[i].title;
+            document.getElementById("pp-prdt-desc").innerText = products[i].description;
+            document.getElementById("pp-prdt-img").src = products[i].thumbnail;
+            document.getElementById("pp-close-btn").addEventListener("click", function () {
+                hidePopUp()
+            });
+            overlay.classList.remove("hide");
+            popup.classList.remove("hide");
+            overlay.classList.add("showOverlay");
+            popup.classList.add("showPup");
+        }
+
+        function hidePopUp() {
+            let popup = document.getElementById("pop-up-product");
+            let overlay = document.getElementById("overlay")
+            overlay.classList.remove("showOverlay");
+            popup.classList.remove("showPup");
+            overlay.classList.add("hide");
+            popup.classList.add("hide");
+        }
+    </script>
 </body>
+
 </html>
